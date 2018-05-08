@@ -9,7 +9,7 @@ services:
       - "6379:6379"
     volumes:
       - ./data/redis:/data
-      - ./config/redis:/usr/local/etc/redis
+      - ./config/redis:/usr/local/etc/redis:ro
     command: bash -c  "sed -e \"s/{PASSWORD}/${REDIS_PASSWORD}/g\" < /usr/local/etc/redis/redis.conf | redis-server -"
   mongodb:
     container_name: orchidae_mongo_dev
