@@ -18,3 +18,12 @@ services:
       - "27017:27017"
     volumes:
       - ./data/mongo:/data/db
+  config:
+    build: ./config-server
+    container_name: orchidae_config
+    ports:
+    - "8888:8888"
+    volumes:
+    - ../orchidae-config:/cluster-config
+    environment:
+    - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/cluster-config
