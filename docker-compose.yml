@@ -27,3 +27,24 @@ services:
     - ../orchidae-config:/cluster-config
     environment:
     - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/cluster-config
+    restart:
+      unless-stopped
+  discovery-service:
+    build: ./discovery-server
+    container_name: orchidae-discovery
+    ports:
+    - "8761:8761"
+    tty:
+      true
+    restart:
+      unless-stopped
+  admin-server:
+    build: ./admin-server
+    ports:
+    - "8092:8092"
+    environment:
+    - REGISTRY_HOST=orchidae-discovery
+    tty:
+      true
+    restart:
+      unless-stopped
