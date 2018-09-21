@@ -2,48 +2,62 @@ version: '3'
 
 services:
 
-  redis:
-    container_name: orchidae_redis_dev
-    image: redis:${REDIS_VERSION}
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/redis:/data
-      - ./config/redis:/usr/local/etc/redis:ro
-    command: bash -c  "sed -e \"s/{PASSWORD}/${REDIS_PASSWORD}/g\" < /usr/local/etc/redis/redis.conf | redis-server -"
+  #  redis:
+  #    container_name: orchidae_redis_dev
+  #    image: redis:${REDIS_VERSION}
+  #    ports:
+  #      - "6379:6379"
+  #    volumes:
+  #      - ./data/redis:/data
+  #      - ./config/redis:/usr/local/etc/redis:ro
+  #    command: bash -c  "sed -e \"s/{PASSWORD}/${REDIS_PASSWORD}/g\" < /usr/local/etc/redis/redis.conf | redis-server -"
   mongodb:
     container_name: orchidae_mongo_dev
     image: mongo:${MONGO_VERSION}
     ports:
-      - "27017:27017"
+    - "27017:27017"
     volumes:
-      - ./data/mongo:/data/db
+    - ./data/mongo:/data/db
   config:
     build: ./config-server
     container_name: orchidae_config
+    hostname: orchidae
     ports:
     - "8888:8888"
     volumes:
     - ../orchidae-config:/cluster-config
+    - ./config/config/application.yml:/application.yml
     environment:
     - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=file:/cluster-config
+    - REGISTRY_HOST=orchidae-discovery
+    - HOST_IP=${HOST_IP}
     restart:
       unless-stopped
   discovery-service:
     build: ./discovery-server
     container_name: orchidae-discovery
+    hostname: orchidae
     ports:
     - "8761:8761"
+    environment:
+    - HOST_IP=${HOST_IP}
+    volumes:
+    - ./config/discovery/application.yml:/application.yml
     tty:
       true
     restart:
       unless-stopped
   admin-server:
     build: ./admin-server
+    container_name: orchidae-admin
+    hostname: orchidae
     ports:
     - "8092:8092"
     environment:
     - REGISTRY_HOST=orchidae-discovery
+    - HOST_IP=${HOST_IP}
+    volumes:
+    - ./config/admin/application.yml:/application.yml
     tty:
       true
     restart:

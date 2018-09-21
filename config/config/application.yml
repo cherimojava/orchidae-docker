@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri: file:../../orchidae-config
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ipAddress: ${HOST_IP}
+  client:
+    serviceUrl:
+      defaultZone: http://${registry.host:localhost}:${registry.port:8761}/eureka/
+server:
+  port: 8888

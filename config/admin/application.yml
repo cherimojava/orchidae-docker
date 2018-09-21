@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: spring-boot-admin
+
+server:
+  port: 8092
+
+management:
+  security:
+    enabled: false
+
+eureka:
+  instance:
+    prefer-ip-address: true
+    ipAddress: ${HOST_IP}
+  client:
+    serviceUrl:
+      defaultZone: http://${registry.host:localhost}:${registry.port:8761}/eureka/
+
+spring.boot.admin.routes.endpoints: env,metrics,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream
