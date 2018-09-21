@@ -12,7 +12,7 @@ services:
   #      - ./config/redis:/usr/local/etc/redis:ro
   #    command: bash -c  "sed -e \"s/{PASSWORD}/${REDIS_PASSWORD}/g\" < /usr/local/etc/redis/redis.conf | redis-server -"
   mongodb:
-    container_name: orchidae_mongo_dev
+    container_name: orchidae-mongo
     image: mongo:${MONGO_VERSION}
     ports:
     - "27017:27017"
@@ -20,7 +20,7 @@ services:
     - ./data/mongo:/data/db
   config:
     build: ./config-server
-    container_name: orchidae_config
+    container_name: orchidae-config
     hostname: orchidae
     ports:
     - "8888:8888"
